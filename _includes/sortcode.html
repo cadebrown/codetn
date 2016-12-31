@@ -1,150 +1,163 @@
-
-{% include google-charts.html %}
+ {% include google-charts.html %}
 
 <script>
 
-google.charts.setOnLoadCallback(init);
+  google.charts.setOnLoadCallback(init);
 
+ // returns a shuffled array
+  function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
 
-function shuffle(array) {
-  var currentIndex = array.length, temporaryValue, randomIndex;
+    while (0 !== currentIndex) {
 
-  while (0 !== currentIndex) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
 
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
 
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
+    return array;
+  }
+  // input, output divs
+  var inp, out;
+
+  // settings variables
+  var lo_lim, hi_lim, _num, _int, _vis;
+  
+  // returns true if the array is sorted, false otherwise.
+  function isSorted() {
+    var last_x = -Infinity;
+    for (x in array) {
+      if (array[last_x] > array[x]) {
+        return false;
+      }
+      last_x = x;
+    }
+    return true;
   }
 
-  return array;
-}
-function test(flag){
-    if(!flag) {
-
-        setTimeout(function() {
-
-           alert();
-           test(true);
-
-        }, 5000);
-        return;
+  // called right before displaying the result of an algorithm
+  // If the array is not sorted, values which are out of place are colored red, green otherwise
+  function finalize() {
+    var last_x = -Infinity;
+    var ret = true;
+    for (x in array) {
+      if (array[last_x] > array[x]) {
+        _colors[x] = "red";
+        _colors[last_x] = "red";
+        ret = false;
+      } else {
+        _colors[x] = "035329";
+        _colors[last_x] = "035329";
+      }
+      last_x = x;
     }
-}
+    return ret;
 
+  }
 
-var inp, out;
-var lo_lim, hi_lim, _num;
+  // initialization function for the library
+  function init() {
+    getDefaults();
+    updateSettings();
 
-function isSorted() {
-  var last_x = -Infinity;
-  for (x in array) {
-    if (last_x > array[x]) {
+    inp = document.getElementById("inp");
+    out = document.getElementById("output");
+
+    inp.value = getCookie("last");
+
+    out.scrollTop = out.scrollHeight;
+
+    chart_init();
+
+    resetArray();
+
+    draw();
+  }
+
+  // user values, int, and then booleans
+  vals = ["lo_lim", "hi_lim", "_num"];
+
+  function updateSettings() {
+    for (val in vals) {
+      eval(vals[val] + " = parseInt(" + $("#" + vals[val]).val() + ")");
+      createCookie(vals[val], $("#" + vals[val]).val())
+    }
+    _vis = $('#_vis').is(":checked")
+    createCookie("VISS", (_vis) ? "t" : "f")
+    _int = $('#_int').is(":checked")
+    createCookie("INT", (_int) ? "t" : "f")
+    
+  }
+
+  function getDefaults() {
+    for (val in vals) {
+      if (getCookie(vals[val])) {
+        $("#" + vals[val]).val(getCookie(vals[val]));
+      }
+    }
+    if (getCookie("VISS")) {
+      $("#_vis").prop('checked', getCookie("VISS")=="t");
+    }
+    if (getCookie("INT")) {
+      $("#_int").prop('checked', getCookie("INT")=="t");
+    }
+  }
+
+  function runScript(e) {
+    if ((e.keyCode == 10 || e.keyCode == 13) && (e.ctrlKey || e.metaKey)) {
+      update();
+      e.preventDefault();
       return false;
     }
-    last_x = array[x];
   }
-  return true;
-}
 
-
-function init() {
-  getDefaults();
-  updateSettings();
-
-  inp = document.getElementById("inp");
-  out = document.getElementById("output");
-
-  inp.value = getCookie("last");
-
-  out.scrollTop = out.scrollHeight;
-
-  chart_init();
- 
-  resetArray();
-  
-  draw();
-}
-
-vals = ["hi_lim", "lo_lim", "_num"];
-
-function updateSettings() {
-  for (val in vals) {
-    eval(vals[val] + " = parseInt(" + $("#" + vals[val]).val() + ")");
-    createCookie(vals[val], $("#" + vals[val]).val())
-  }
-}
-
-function getDefaults() {
-  for (val in vals) {
-    if (getCookie(vals[val])) {
-      $("#" + vals[val]).val(getCookie(vals[val]));
+  function resetArray() {
+    _first = [];
+    _colors = [];
+    for (_i = 0; _i < _num; ++_i) {
+      to_add = Math.random() * (1 + hi_lim - lo_lim) + lo_lim;
+      if (_int) to_add = Math.round(to_add);
+      _first.push(to_add);
+      _colors.push("035329");
     }
+    array = shuffle(_first);
+    length = array.length;
+    updateArray();
   }
-}
 
-function runScript(e) {
-  if ((e.keyCode == 10 || e.keyCode == 13) && (e.ctrlKey || e.metaKey)) {
-    update();
-    e.preventDefault();
-    return false;
+  function update() {
+    updateSettings();
+    //resetArray();
+
+    out.value = "";
+    createCookie("last", inp.value);
+    var tnow, tend;
+    tnow = performance.now();
+    eval(inp.value);
+    tend = performance.now();
+    write("Took: " + (tend - tnow) + "ms");
+    write("Is sorted: " + finalize());
+    draw();
   }
-}
+  function reset() {
+    updateSettings();
+    resetArray();
 
-function swap(a, b) {
-  if (a < 0 || b < 0) {
-    err("Swapping must have positive indexes!");
-    return;
-  } else if (a >= array.length || b >= array.length) {
-    err("One of the indexes is above the max length, " + array.length);
-    return;
+    out.value = "";
+    array = shuffle(_first);
+    draw();
   }
-  var tmp = array[a];
-  array[a] = array[b];
-  array[b] = tmp;
-  //update();
-  draw();
-}
-function resetArray() {
-  _first=[];
-  for (_i = 0; _i < _num; ++_i) _first.push(Math.random() * (1 + hi_lim - lo_lim) + lo_lim);
-  array = shuffle(_first);
-  length = array.length;
-  updateArray();
-}
+  function err(text) {
+    out.value = out.value + "ERROR: " + text + "\n";
+  }
+  function write(text) {
+    out.value = out.value + text + "\n";
+  }
 
-function update() {
-  updateSettings();
-  //resetArray();
-  
-  out.value = "";
-  createCookie("last", inp.value);
-  var tnow, tend;
-  tnow = performance.now();
-  eval(inp.value);
-  tend = performance.now();
-  write("Took: " + (tend - tnow) + "ms");
-  write("Is sorted: " + isSorted());
-  draw();
-}
-function reset() {
-  updateSettings();
-  resetArray();
-
-  out.value = "";
-  array = shuffle(_first);
-  draw();
-}
-function err(text) {
-  out.value = out.value + "ERROR: " + text + "\n";
-}
-function write(text) {
-  out.value = out.value + text + "\n";
-}
-
-var example_code = ["/* \n\
+  var example_code = ["/* \n\
  \n\
  Sort[101] Example Code: Bubble sort \n\
  \n\
@@ -161,29 +174,28 @@ while (!isSorted()) { \n\
 }"]
 
 
-function changeExample(thing) {
+  function changeExample(thing) {
     inp.value = example_code[parseInt(thing.value)];
-}
+  }
 
-var createCookie = function(name, value) {
+  var createCookie = function (name, value) {
     value = value.replace(/(?:\r\n|\r|\n)/g, '__n_no_var');
     value = value.replace(/(?:\;)/g, '__s_no_var');
-    console.log(value)
     document.cookie = name + "=" + value + ";";
-}
+  }
 
-function getCookie(c_name) {
+  function getCookie(c_name) {
     if (document.cookie.length > 0) {
-        c_start = document.cookie.indexOf(c_name + "=");
-        if (c_start != -1) {
-            c_start = c_start + c_name.length + 1;
-            c_end = document.cookie.indexOf(";", c_start);
-            if (c_end == -1) {
-                c_end = document.cookie.length;
-            }
-            return unescape(document.cookie.substring(c_start, c_end)).replace(/__n_no_var/g, "\n").replace(/__s_no_var/g, ";");
+      c_start = document.cookie.indexOf(c_name + "=");
+      if (c_start != -1) {
+        c_start = c_start + c_name.length + 1;
+        c_end = document.cookie.indexOf(";", c_start);
+        if (c_end == -1) {
+          c_end = document.cookie.length;
         }
+        return unescape(document.cookie.substring(c_start, c_end)).replace(/__n_no_var/g, "\n").replace(/__s_no_var/g, ";");
+      }
     }
     return "";
-}
+  }
 </script>

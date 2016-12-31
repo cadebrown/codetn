@@ -4,18 +4,20 @@
 	google.charts.load('current', { packages: ['corechart', 'bar'] });
 	//google.charts.setOnLoadCallback(init);
 
-	var data, chart, options;
+	var data, chart, options, colors;
 
 	function chart_init() {
 		data = new google.visualization.DataTable();
 		chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+
 		data.addColumn('number', 'Index');
 		data.addColumn('number', 'Val');
+		data.addColumn({ type: 'string', role: 'style' });
 		options = {
 			animation: {
 				startup: true,
-				duration: 1000,
-				easing: 'out'
+				duration: 250,
+				easing: 'inAndOut'
 			},
 			legend: {
 				position: 'none'
@@ -26,25 +28,44 @@
 				textPosition: 'none'
 			}
 		};
+		chart.draw(data, options);
+	}
+
+	function swap(a, b) {
+		if (a < 0 || b < 0) {
+			err("Swapping must have positive indexes!");
+			return;
+		} else if (a >= array.length || b >= array.length) {
+			err("One of the indexes is above the max length, " + array.length);
+			return;
+		}
+		var tmp = array[a];
+		array[a] = array[b];
+		array[b] = tmp;
 	}
 
 	function draw() {
 		updateArray();
-		chart.draw(data, options);
+		if (_vis) {
+			chart.draw(data, options);
+		}
 	}
 
 
 	function updateArray() {
 		var ci = 0;
-		if (data.Tf.length == 0) {
+		if (data.Tf.length != _num) {
+			data.removeRows(0, data.Tf.length);
+
 			for (r in array) {
-				data.addRow([ci++, array[r]]);
+				data.addRow([ci++, array[r], "color: " + _colors[r]]);
 			}
 		} else {
-			//data.removeRows(0, data.Tf.length);
 			for (r in array) {
 				//data.addRow([ci++, array[r]]);
-				data.setValue(ci++, 1, array[r]);
+				data.setValue(ci, 1, array[r]);
+				data.setValue(ci, 2, "color: " + _colors[r]);
+				ci++;
 			}
 		}
 	}
