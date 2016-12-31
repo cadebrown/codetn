@@ -4,11 +4,11 @@
 	google.charts.load('current', { packages: ['corechart', 'bar'] });
 	//google.charts.setOnLoadCallback(init);
 
-	var data, chart, options, colors;
+	var data, chart, options, colors, chart_div;
 
 	function chart_init() {
 		data = new google.visualization.DataTable();
-		chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+		chart = new google.visualization.ColumnChart(chart_div);
 
 		data.addColumn('number', 'Index');
 		data.addColumn('number', 'Val');
@@ -16,8 +16,8 @@
 		options = {
 			animation: {
 				startup: true,
-				duration: 250,
-				easing: 'inAndOut'
+				duration: 100,
+				easing: 'linear'
 			},
 			legend: {
 				position: 'none'
@@ -36,17 +36,61 @@
 			err("Swapping must have positive indexes!");
 			return;
 		} else if (a >= array.length || b >= array.length) {
-			err("One of the indexes is above the max length, " + array.length);
+			err("One of the indexes is above the max index, " + array.length-1);
 			return;
 		}
 		var tmp = array[a];
 		array[a] = array[b];
 		array[b] = tmp;
+		_colors[a] = SWAP_COLOR;
+		_colors[b] = SWAP_COLOR;
+	}
+
+	function insert(index, val) {
+		if (index < 0) {
+			err("Inserting must have positive index!");
+			return;
+		} else if (index > array.length) {
+			err("Insert index is greater than max index, " + array.length);
+			return;
+		}
+		array.splice(index, 0, val);
+		_num++;
+	}
+
+	function del(index) {
+		if (index < 0) {
+			err("Delete must have positive index!");
+			return;
+		} else if (index > array.length) {
+			err("Delete index is greater than max index, " + array.length);
+			return;
+		}
+		array.splice(index, 1);
+		_num--;
+	}
+
+	function move(from, to) {
+		if (from < 0 || to < 0) {
+			err("Move must have positive index!");
+			return;
+		} else if (from > array.length || to > array.length) {
+			err("Move index is greater than max index, " + array.length);
+			return;
+		}
+		var tmp = array[from];
+		del(from);
+		insert(to, tmp);
+	}
+
+
+	function append(val) {
+		insert(length, val);
 	}
 
 	function draw() {
-		updateArray();
 		if (_vis) {
+			updateArray();
 			chart.draw(data, options);
 		}
 	}
@@ -58,13 +102,19 @@
 			data.removeRows(0, data.Tf.length);
 
 			for (r in array) {
-				data.addRow([ci++, array[r], "color: " + _colors[r]]);
+				valid_color = "color: ";
+				if (_colors.length >= ci) {
+					valid_color += DEFAULT_COLOR;
+				} else {
+					valid_color += _colors[ci];
+				}
+				data.addRow([ci++, array[ci], valid_color]);
 			}
 		} else {
 			for (r in array) {
 				//data.addRow([ci++, array[r]]);
-				data.setValue(ci, 1, array[r]);
-				data.setValue(ci, 2, "color: " + _colors[r]);
+				data.setValue(ci, 1, array[ci]);
+				data.setValue(ci, 2, "color: " + _colors[ci]);
 				ci++;
 			}
 		}

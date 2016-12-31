@@ -4,7 +4,20 @@
 
   google.charts.setOnLoadCallback(init);
 
- // returns a shuffled array
+  /*
+  
+  Colors
+  
+  */
+
+  DEFAULT_COLOR = "035329";
+  NOT_SORTED_COLOR = "c40000";
+  SWAP_COLOR = "0000df";
+
+  _noswitch_colors = [SWAP_COLOR];
+
+
+  // returns a shuffled array
   function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -24,14 +37,19 @@
   var inp, out;
 
   // settings variables
-  var lo_lim, hi_lim, _num, _int, _vis;
-  
+  var lo_lim, hi_lim, _num, _int, _vis, _autorun;
+
   // returns true if the array is sorted, false otherwise.
   function isSorted() {
     var last_x = -Infinity;
     for (x in array) {
       if (array[last_x] > array[x]) {
+        _colors[x] = NOT_SORTED_COLOR;
+        _colors[last_x] = NOT_SORTED_COLOR;
         return false;
+      } else {
+        _colors[x] = DEFAULT_COLOR;
+        _colors[last_x] = DEFAULT_COLOR;
       }
       last_x = x;
     }
@@ -39,18 +57,23 @@
   }
 
   // called right before displaying the result of an algorithm
-  // If the array is not sorted, values which are out of place are colored red, green otherwise
+  // If the array is not sorted, values which are out of place are colored NOT_SORTED_COLOR, SORTED_COLOR otherwise
   function finalize() {
     var last_x = -Infinity;
     var ret = true;
+    function color_mac(index, color) {
+      if (!_noswitch_colors.includes(_colors[index])) {
+        _colors[index] = color;
+      }
+    }
     for (x in array) {
       if (array[last_x] > array[x]) {
-        _colors[x] = "red";
-        _colors[last_x] = "red";
+        color_mac(x, NOT_SORTED_COLOR);
+        color_mac(last_x, NOT_SORTED_COLOR);
         ret = false;
       } else {
-        _colors[x] = "035329";
-        _colors[last_x] = "035329";
+        color_mac(x, DEFAULT_COLOR);
+        color_mac(last_x, DEFAULT_COLOR);
       }
       last_x = x;
     }
@@ -65,6 +88,8 @@
 
     inp = document.getElementById("inp");
     out = document.getElementById("output");
+    chart_div = document.getElementById('chart_div');
+
 
     inp.value = getCookie("last");
 
@@ -78,7 +103,7 @@
   }
 
   // user values, int, and then booleans
-  vals = ["lo_lim", "hi_lim", "_num"];
+  vals = ["lo_lim", "hi_lim", "_num", "_autorun"];
 
   function updateSettings() {
     for (val in vals) {
@@ -89,49 +114,126 @@
     createCookie("VISS", (_vis) ? "t" : "f")
     _int = $('#_int').is(":checked")
     createCookie("INT", (_int) ? "t" : "f")
-    
+
+    if (_vis) {
+      $("#chart_div").show();
+    } else {
+      $("#chart_div").hide();
+    }
+
   }
 
   function getDefaults() {
     for (val in vals) {
+      $("#" + vals[val]).keyup(reset)
       if (getCookie(vals[val])) {
         $("#" + vals[val]).val(getCookie(vals[val]));
       }
     }
+    $("#_vis").change(reset)
+    $("#_int").change(reset)
+
     if (getCookie("VISS")) {
-      $("#_vis").prop('checked', getCookie("VISS")=="t");
+      $("#_vis").prop('checked', getCookie("VISS") == "t");
     }
     if (getCookie("INT")) {
-      $("#_int").prop('checked', getCookie("INT")=="t");
+      $("#_int").prop('checked', getCookie("INT") == "t");
     }
   }
 
   function runScript(e) {
     if ((e.keyCode == 10 || e.keyCode == 13) && (e.ctrlKey || e.metaKey)) {
-      update();
+      run();
+      e.preventDefault();
+      return false;
+    }
+    if (e.which == 9 || e.tabKey) {
       e.preventDefault();
       return false;
     }
   }
 
+  function resetColors() {
+    _colors = [];
+    for (_i = 0; _i < _num; ++_i) {
+      _colors.push(DEFAULT_COLOR);
+    }
+  }
+
   function resetArray() {
     _first = [];
-    _colors = [];
     for (_i = 0; _i < _num; ++_i) {
       to_add = Math.random() * (1 + hi_lim - lo_lim) + lo_lim;
       if (_int) to_add = Math.round(to_add);
       _first.push(to_add);
-      _colors.push("035329");
     }
+    resetColors();
     array = shuffle(_first);
     length = array.length;
     updateArray();
   }
 
-  function update() {
-    updateSettings();
+  function finalize_autorun() {
+    var last_x = -Infinity;
+    var ret = true;
+    function color_mac(index, color) {
+        _colors[index] = color;
+    }
+    for (x in array) {
+      if (array[last_x] > array[x]) {
+        color_mac(x, NOT_SORTED_COLOR);
+        color_mac(last_x, NOT_SORTED_COLOR);
+        ret = false;
+      } else {
+        color_mac(x, DEFAULT_COLOR);
+        color_mac(last_x, DEFAULT_COLOR);
+      }
+      last_x = x;
+    }
+    write("Autorun time took: " + (eautotime - sautotime) + "ms");
+    draw();
+  }
+  _is_running = false, c_autorun = false, sautotime = 0, eautotime = 0, _autorun_fresh = true;
+  function start_autorun() {
+    if (_is_running) {
+      clearInterval(c_autorun);
+    }
+    eautotime = performance.now();
+    c_autorun = setInterval(function () {
+        if (!isSorted()) {
+          run()
+        } else if (_autorun_fresh) {
+          _autorun_fresh = false;
+          finalize_autorun()
+        }
+      }, _autorun);
+    _is_running = true;
+  }
+
+  function stop_autorun() {
+    if (_is_running) {
+      clearInterval(c_autorun);
+    }
+    eautotime = performance.now();
+
+    finalize_autorun();
+    _is_running = false;
+  }
+
+  function toggle_autorun() {
+    if (_is_running) {
+      stop_autorun();
+    } else {
+      start_autorun();
+    }
+  }
+
+  function run() {
+    //updateSettings();
     //resetArray();
 
+    resetColors();
+    _autorun_fresh = true;
     out.value = "";
     createCookie("last", inp.value);
     var tnow, tend;
@@ -142,6 +244,7 @@
     write("Is sorted: " + finalize());
     draw();
   }
+
   function reset() {
     updateSettings();
     resetArray();
@@ -151,7 +254,7 @@
     draw();
   }
   function err(text) {
-    out.value = out.value + "ERROR: " + text + "\n";
+    write("ERROR: " + text);
   }
   function write(text) {
     out.value = out.value + text + "\n";
@@ -171,7 +274,23 @@ while (!isSorted()) { \n\
       swap(i, i+1); \n\
     } \n\
   } \n\
-}"]
+}",
+    "/* \n\
+ \n\
+ Sort[101] Example Code: Bubble sort animation\n\
+ \n\
+ Time complexity: O(n^2), space complexity: O(n) \n\
+ \n\
+ To run, hit the 'autorun' button\n\
+\n\
+*/\n\
+\n\
+for (i = 0; i < length-1; i++) { \n\
+  if (array[i] > array[i+1]) { \n\
+    swap(i, i+1); \n\
+  } \n\
+}"
+  ];
 
 
   function changeExample(thing) {

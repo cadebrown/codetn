@@ -9,6 +9,7 @@ permalink: /sorting/
 Examples: <select id="exampledata" onchange="changeExample(this);">
       <option value="">SELECT</option>
       <option value="0">Bubble Sort</option>
+      <option value="1">Bubble Sort (Animated)</option>
 </select>
 
 <a onclick="$('#sett').toggle(); if (!$('#sett').is(':visible')) { reset(); };"><img src="/images/gear.png" class="settingsgear"></a>
@@ -18,9 +19,12 @@ Examples: <select id="exampledata" onchange="changeExample(this);">
       Lower Limit: <input id="lo_lim" type="int" value="0"/> <br/>
       Upper Limit: <input id="hi_lim" type="int" value="10"/> <br/>
       Amount: <input id="_num" type="int" value="10"/> <br/>
+      Autorun delay: <input id="_autorun" type="int" value="500"/> <br/>
       Integer only?: <input id="_int" type="checkbox"/> <br/>
       Show visualization?: <input id="_vis" type="checkbox" checked/> <br/>
-      <button id="apply" onclick="reset();" class="button">Apply</button>
+      <!--  
+            We don't need this anymore, because they autoupdate
+            <button id="apply" onclick="reset();" class="button">Apply</button> -->
 </div>
 
 <br/>
@@ -36,5 +40,6 @@ Input:
 Output:
 <textarea id="output" style="width: 100%; height: 6em; max-width: 100%" readonly></textarea>
 
-<button id="run" onclick="update();" class="button">Run</button>
 <button id="reset" onclick="reset();" class="button">Reset</button>
+<button id="run" onclick="run();" class="button">Run</button>
+<button id="reset" onclick="toggle_autorun();" class="button">AutoRun</button>
