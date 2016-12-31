@@ -166,11 +166,10 @@ function swap(a, b) {
   var tmp = array[a];
   array[a] = array[b];
   array[b] = tmp;
-  draw();
+  //draw();
 }
 
 function update() {
-  //draw();
   out.value = "";
   createCookie("last", inp.value);
   eval(inp.value);
