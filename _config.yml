@@ -3,10 +3,10 @@
 #
 
 # Name of your site (displayed in the header)
-name: Sorting Help
+name: Sort[101]
 
 # Short bio or description (displayed in the header)
-description: Helps you sort your life out
+description: Helps students learn sorting
 
 
 #
@@ -19,7 +19,7 @@ footer-links:
   email: codetn@knoxschools.us
   facebook:
   flickr:
-  github:
+  github: cadebrown/codetn
   instagram:
   linkedin:
   pinterest:

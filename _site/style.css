@@ -92,7 +92,7 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
   font-size: 30px;
-  color: #dF5F00;
+  color: #035329;
 }
 h1 a {
   color: inherit;
@@ -100,7 +100,7 @@ h1 a {
 
 h2 {
   font-size: 24px;
-  color: #dF5F00;
+  color: #035329;
 }
 
 h3 {
@@ -696,10 +696,10 @@ code {
 }
 
 .post a {
-  color: #dF5F00;
+  color: #035329;
 }
 .post a:hover {
-  color: #793400;
+  color: black;
 }
 
 .post-heading a {
@@ -743,9 +743,9 @@ button:focus {
 
 .button.button-primary,
 button.button-primary {
-  color: #dF5F00;
+  color: #035329;
   background-color: transparent;
-  border-color: #dF5F00;
+  border-color: #035329;
 }
 
 .button.button-primary:hover,
@@ -753,8 +753,8 @@ button.button-primary:hover,
 .button.button-primary:focus,
 button.button-primary:focus {
   color: #FFF;
-  background-color: #dF5F00;
-  border-color: #dF5F00;
+  background-color: #035329;
+  border-color: #035329;
 }
 
 /*
@@ -762,7 +762,7 @@ button.button-primary:focus {
 */
 .intro-header {
   border-top: 5px solid white;
-  background-color: #dF5F00;
+  background-color: #035329;
 }
 
 .intro-header .post-heading {
@@ -802,11 +802,11 @@ button.button-primary:focus {
     
 */
 .svg-icon a {
-  color: #ac4900;
+  color: #012211;
   cursor: pointer;
 }
 .svg-icon a:hover {
-  color: #793400;
+  color: black;
 }
 
 /*
@@ -925,7 +925,7 @@ button.button-primary:focus {
 
 .ch-info p a {
   display: block;
-  color: #dF5F00;
+  color: #035329;
   font-style: normal;
   font-weight: 700;
   text-transform: uppercase;
@@ -936,7 +936,7 @@ button.button-primary:focus {
 }
 
 .ch-info p a:hover {
-  color: #ac4900;
+  color: #012211;
 }
 
 .ch-item:hover .ch-info-front {
