@@ -59,6 +59,26 @@ table {
 /**************/
 /* BASE RULES */
 /**************/
+.inputcode {
+  width: 100%;
+  height: 20em;
+  max-width: 100%;
+}
+
+.settingsgear {
+  width: 4em;
+  height: 4em;
+  float: right;
+  display: inline;
+}
+
+.settings {
+  border: 1px solid black;
+  width: calc(100% - 5em);
+  margin: .5em;
+  padding: .5em;
+}
+
 html {
   font-size: 100%;
 }

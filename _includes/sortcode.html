@@ -33,12 +33,10 @@ function test(flag){
     }
 }
 
-_first=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-array = shuffle(_first);
-length = array.length;
 
 var data, chart, options;
 var inp, out;
+var lo_lim, hi_lim, _num;
 
 function isSorted() {
   var last_x = -Infinity;
@@ -52,6 +50,9 @@ function isSorted() {
 }
 
 function init() {
+  getDefaults();
+  updateSettings();
+
   inp = document.getElementById("inp");
   out = document.getElementById("output");
 
@@ -73,6 +74,8 @@ function init() {
       position: 'none'
     }
   };
+  resetArray();
+  
   draw();
 }
 function updateArray() {
@@ -80,6 +83,22 @@ function updateArray() {
   var ci = 0;
   for (r in array) {
     data.addRow([ci++, array[r]]);
+  }
+}
+vals = ["hi_lim", "lo_lim", "_num"];
+
+function updateSettings() {
+  for (val in vals) {
+    eval(vals[val] + " = parseInt(" + $("#" + vals[val]).val() + ")");
+    createCookie(vals[val], $("#" + vals[val]).val())
+  }
+}
+
+function getDefaults() {
+  for (val in vals) {
+    if (getCookie(vals[val])) {
+      $("#" + vals[val]).val(getCookie(vals[val]));
+    }
   }
 }
 
@@ -109,14 +128,38 @@ function swap(a, b) {
   array[b] = tmp;
   //draw();
 }
+function resetArray() {
+  _first=[];
+  for (_i = 0; _i < _num; ++_i) _first.push(Math.random() * (1 + hi_lim - lo_lim) + lo_lim);
+  array = shuffle(_first);
+  length = array.length;
+  updateArray();
+}
+
+function settings_changed() {
+  for (val in vals) {
+
+  }
+}
 
 function update() {
+  updateSettings();
+  //resetArray();
+  
   out.value = "";
   createCookie("last", inp.value);
+  var tnow, tend;
+  tnow = performance.now();
   eval(inp.value);
+  tend = performance.now();
+  write("Took: " + (tend - tnow) + "ms");
+  write("Is sorted: " + isSorted());
   draw();
 }
 function reset() {
+  updateSettings();
+  resetArray();
+
   out.value = "";
   array = shuffle(_first);
   draw();

@@ -11,10 +11,25 @@ Examples: <select id="exampledata" onchange="changeExample(this);">
       <option value="0">Bubble Sort</option>
 </select>
 
-<div id="chart_div" syl></div>
+<a onclick="$('#sett').toggle(); if (!$('#sett').is(':visible')) { reset(); };"><img src="/images/gear.png" class="settingsgear"></a>
+
+
+<div id="sett" hidden="true" class="settings">
+      Lower Limit: <input id="lo_lim" type="int" value="0"/> <br/>
+      Upper Limit: <input id="hi_lim" type="int" value="10"/> <br/>
+      Number of items: <input id="_num" type="int" value="10"/> <br/>
+      <button id="apply" onclick="reset();" class="button">Apply</button>
+</div>
+
+<br/>
+<br/>
+<br/>
+
+
+<div id="chart_div" style="width: 100%; height: 15em;"></div>
 
 Input:
-<textarea id="inp" onkeypress="runScript(event)" style="width: 100%; height: 20em; max-width: 100%"></textarea>
+<textarea id="inp" onkeypress="runScript(event)" class="inputcode"></textarea>
 
 Output:
 <textarea id="output" style="width: 100%; height: 6em; max-width: 100%" readonly></textarea>
