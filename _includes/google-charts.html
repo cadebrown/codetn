@@ -1,0 +1,52 @@
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script>
+	google.charts.load('current', { packages: ['corechart', 'bar'] });
+	//google.charts.setOnLoadCallback(init);
+
+	var data, chart, options;
+
+	function chart_init() {
+		data = new google.visualization.DataTable();
+		chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+		data.addColumn('number', 'Index');
+		data.addColumn('number', 'Val');
+		options = {
+			animation: {
+				startup: true,
+				duration: 1000,
+				easing: 'out'
+			},
+			legend: {
+				position: 'none'
+			},
+			hAxis: {
+				baselineColor: 'transparent',
+				gridlineColor: 'transparent',
+				textPosition: 'none'
+			}
+		};
+	}
+
+	function draw() {
+		updateArray();
+		chart.draw(data, options);
+	}
+
+
+	function updateArray() {
+		var ci = 0;
+		if (data.Tf.length == 0) {
+			for (r in array) {
+				data.addRow([ci++, array[r]]);
+			}
+		} else {
+			//data.removeRows(0, data.Tf.length);
+			for (r in array) {
+				//data.addRow([ci++, array[r]]);
+				data.setValue(ci++, 1, array[r]);
+			}
+		}
+	}
+
+</script>

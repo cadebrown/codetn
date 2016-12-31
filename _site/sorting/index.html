@@ -59,12 +59,64 @@
   <h1>Sorting</h1>
 
   <div class="entry">
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script>
+	google.charts.load('current', { packages: ['corechart', 'bar'] });
+	//google.charts.setOnLoadCallback(init);
+
+	var data, chart, options;
+
+	function chart_init() {
+		data = new google.visualization.DataTable();
+		chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+		data.addColumn('number', 'Index');
+		data.addColumn('number', 'Val');
+		options = {
+			animation: {
+				startup: true,
+				duration: 1000,
+				easing: 'out'
+			},
+			legend: {
+				position: 'none'
+			},
+			hAxis: {
+				baselineColor: 'transparent',
+				gridlineColor: 'transparent',
+				textPosition: 'none'
+			}
+		};
+	}
+
+	function draw() {
+		updateArray();
+		chart.draw(data, options);
+	}
+
+
+	function updateArray() {
+		var ci = 0;
+		if (data.Tf.length == 0) {
+			for (r in array) {
+				data.addRow([ci++, array[r]]);
+			}
+		} else {
+			//data.removeRows(0, data.Tf.length);
+			for (r in array) {
+				//data.addRow([ci++, array[r]]);
+				data.setValue(ci++, 1, array[r]);
+			}
+		}
+	}
+
+</script>
 
 <script>
 
-google.charts.load('current', {packages: ['corechart', 'bar']});
 google.charts.setOnLoadCallback(init);
+
 
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex;
@@ -95,7 +147,6 @@ function test(flag){
 }
 
 
-var data, chart, options;
 var inp, out;
 var lo_lim, hi_lim, _num;
 
@@ -110,6 +161,7 @@ function isSorted() {
   return true;
 }
 
+
 function init() {
   getDefaults();
   updateSettings();
@@ -121,31 +173,13 @@ function init() {
 
   out.scrollTop = out.scrollHeight;
 
-  data = new google.visualization.DataTable();
-  chart = new google.charts.Bar(document.getElementById('chart_div'));
-  data.addColumn('number', 'Index');
-  data.addColumn('number', 'Val');
-  options = {
-    animation: {
-      startup: true,      
-      duration: 1000,
-      easing: 'out'
-    },
-    legend: {
-      position: 'none'
-    }
-  };
+  chart_init();
+ 
   resetArray();
   
   draw();
 }
-function updateArray() {
-  data.removeRows(0, data.Tf.length);
-  var ci = 0;
-  for (r in array) {
-    data.addRow([ci++, array[r]]);
-  }
-}
+
 vals = ["hi_lim", "lo_lim", "_num"];
 
 function updateSettings() {
@@ -164,16 +198,11 @@ function getDefaults() {
 }
 
 function runScript(e) {
-  console.log(e);
-    if ((e.keyCode == 10 || e.keyCode == 13) && (e.ctrlKey || e.metaKey)) {
-        update();
-        e.preventDefault();
-        return false;
-    }
-}
-function draw() {
-    updateArray();
-    chart.draw(data, options);
+  if ((e.keyCode == 10 || e.keyCode == 13) && (e.ctrlKey || e.metaKey)) {
+    update();
+    e.preventDefault();
+    return false;
+  }
 }
 
 function swap(a, b) {
@@ -187,7 +216,8 @@ function swap(a, b) {
   var tmp = array[a];
   array[a] = array[b];
   array[b] = tmp;
-  //draw();
+  //update();
+  draw();
 }
 function resetArray() {
   _first=[];
@@ -195,12 +225,6 @@ function resetArray() {
   array = shuffle(_first);
   length = array.length;
   updateArray();
-}
-
-function settings_changed() {
-  for (val in vals) {
-
-  }
 }
 
 function update() {
@@ -236,13 +260,7 @@ var example_code = ["/* \n\
  \n\
  Sort[101] Example Code: Bubble sort \n\
  \n\
-  Author: Cade Brown \n\
- \n\
-  While the array is not sorted, the code loops, and if two items need to be switched, they are. \n\
- \n\
-  Runtime: O(n^2) for most random arrangements, but runs in O(n) for sorted list (just verified by isSorted()). \n\
- \n\
-  Run space: O(n). There is a temporary variable used by our method swap(), which is \n\
+ Time complexity: O(n^2), space complexity: O(n) \n\
  \n\
 */ \n\
  \n\
