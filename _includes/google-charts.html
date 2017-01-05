@@ -98,8 +98,8 @@
 
 	function updateArray() {
 		var ci = 0;
-		if (data.Tf.length != _num) {
-			data.removeRows(0, data.Tf.length);
+		if (data.getNumberOfRows() != _num) {
+			data.removeRows(0, data.getNumberOfRows());
 
 			for (r in array) {
 				valid_color = "color: ";

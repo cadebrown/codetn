@@ -59,7 +59,8 @@
   <h1>Sorting</h1>
 
   <div class="entry">
-     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+     
+ <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <script>
 	google.charts.load('current', { packages: ['corechart', 'bar'] });
@@ -159,8 +160,8 @@
 
 	function updateArray() {
 		var ci = 0;
-		if (data.Tf.length != _num) {
-			data.removeRows(0, data.Tf.length);
+		if (data.getNumberOfRows() != _num) {
+			data.removeRows(0, data.getNumberOfRows());
 
 			for (r in array) {
 				valid_color = "color: ";
@@ -272,7 +273,6 @@
     inp = document.getElementById("inp");
     out = document.getElementById("output");
     chart_div = document.getElementById('chart_div');
-
 
     inp.value = getCookie("last");
 
