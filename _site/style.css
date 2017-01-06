@@ -338,6 +338,10 @@ nav a:hover, nav a:active {
   background-color: #eee;
 }
 
+.center {
+  text-align: center;
+}
+
 footer {
   padding: 20px 0;
   text-align: center;
