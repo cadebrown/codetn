@@ -224,10 +224,12 @@
 
   first_time = function() {
       write("First time");
+      return -1;
   }
 
   each_time = function() {
       write("Each time");
+      return -1;
   }
 
   function stop_autorun() {
@@ -262,6 +264,13 @@
     var tnow, tend;
     tnow = performance.now();
     eval(inp.value);
+    first_time();
+    var _continue = true;
+    while (!isSorted() && _continue) {
+      if(each_time() == -1) {
+        _continue = false;
+      }
+    }
     tend = performance.now();
     write("Took: " + (tend - tnow) + "ms");
     write("Is sorted: " + finalize());
