@@ -43,7 +43,7 @@
   var inp, out;
 
   // settings variables
-  var lo_lim, hi_lim, _num, _int, _vis, _autorun;
+  var lo_lim, hi_lim, _num, _int, _vis, _autorun, _saveonrun;
 
   // returns true if the array is sorted, false otherwise.
   function isSorted() {
@@ -119,6 +119,8 @@
     createCookie("VISS", (_vis) ? "t" : "f")
     _int = $('#_int').is(":checked")
     createCookie("INT", (_int) ? "t" : "f")
+    _saveonrun = $('#_saveonrun').is(":checked")
+    createCookie("SAVEONRUN", (_saveonrun) ? "t" : "f")
 
     if (_vis) {
       $("#chart_div").show();
@@ -130,19 +132,22 @@
 
   function getDefaults() {
     for (val in vals) {
-      $("#" + vals[val]).keyup(reset)
+      //$("#" + vals[val]).keyup(reset)
       if (getCookie(vals[val])) {
         $("#" + vals[val]).val(getCookie(vals[val]));
       }
     }
-    $("#_vis").change(reset)
-    $("#_int").change(reset)
+    //$("#_vis").change(reset)
+    //$("#_int").change(reset)
 
     if (getCookie("VISS")) {
       $("#_vis").prop('checked', getCookie("VISS") == "t");
     }
     if (getCookie("INT")) {
       $("#_int").prop('checked', getCookie("INT") == "t");
+    }
+    if (getCookie("SAVEONRUN")) {
+      $("#_saveonrun").prop('checked', getCookie("SAVEONRUN") == "t");
     }
   }
 
@@ -195,7 +200,7 @@
       }
       last_x = x;
     }
-    write("Autorun time took: " + (eautotime - sautotime) + "ms");
+    //write("Autorun time took: " + (eautotime - sautotime) + "ms");
     draw();
   }
   _is_running = false, c_autorun = false, sautotime = 0, eautotime = 0, _autorun_fresh = true;
@@ -204,15 +209,25 @@
       clearInterval(c_autorun);
     }
     eautotime = performance.now();
+    eval(inp.value);
+    first_time  ();
     c_autorun = setInterval(function () {
         if (!isSorted()) {
-          run()
+          run_auto()
         } else if (_autorun_fresh) {
           _autorun_fresh = false;
           finalize_autorun()
         }
       }, _autorun);
     _is_running = true;
+  }
+
+  first_time = function() {
+      write("First time");
+  }
+
+  each_time = function() {
+      write("Each time");
   }
 
   function stop_autorun() {
@@ -234,13 +249,15 @@
   }
 
   function run() {
-    //updateSettings();
+    updateSettings();
     //resetArray();
 
     resetColors();
     _autorun_fresh = true;
     out.value = "";
-    createCookie("last", inp.value);
+    if (_saveonrun) {
+      save();
+    }
     var tnow, tend;
     tnow = performance.now();
     eval(inp.value);
@@ -250,7 +267,31 @@
     draw();
   }
 
+  function save() {
+    createCookie("last", inp.value);
+  }
+
+  function run_auto() {
+    //updateSettings();
+    //resetArray();
+
+    resetColors();
+    _autorun_fresh = true;
+    out.value = "";
+    if (_saveonrun) {
+      save();
+    }
+    var tnow, tend;
+    tnow = performance.now();
+    each_time();
+    tend = performance.now();
+    write("Took: " + (tend - tnow) + "ms");
+    write("Is sorted: " + finalize());
+    draw();
+  }
+
   function reset() {
+    stop_autorun();
     updateSettings();
     resetArray();
 
@@ -263,6 +304,7 @@
   }
   function write(text) {
     out.value = out.value + text + "\n";
+    console.log(text);
   }
 
   var example_code = ["/* \n\
@@ -282,18 +324,70 @@ while (!isSorted()) { \n\
 }",
     "/* \n\
  \n\
- Sort[101] Example Code: Bubble sort animation\n\
+ Sort[101] Example Code: Bubble sort step\n\
  \n\
  Time complexity: O(n^2), space complexity: O(n) \n\
  \n\
- To run, hit the 'autorun' button\n\
+ To run, hit the `run` button to run one iteration, or\n\
+ To run, hit the 'autorun' button to animate\n\
 \n\
 */\n\
 \n\
-for (i = 0; i < length-1; i++) { \n\
-  if (array[i] > array[i+1]) { \n\
-    swap(i, i+1); \n\
-  } \n\
+first_time = function() {\n\
+  write(\"Starting bublesort\");\n\
+}\n\
+\n\
+each_time = function() {\n\
+  for (i = 0; i < length-1; i++) { \n\
+    if (array[i] > array[i+1]) { \n\
+      swap(i, i+1); \n\
+    } \n\
+  }\n\
+}",
+"/*\n\
+ \n\
+ Sort[101] Example Code: Insertion sort\n\
+ \n\
+ Time complexity: O(n^2), space complexity: O(n) \n\
+\n\
+ To run, hit the `run` button\n\
+\n\
+*/\n\
+\n\
+for (j = 0; j < length; ++j) {\n\
+  _min = j;\n\
+  for (i = j; i < length; i++) { \n\
+    if (array[i] < array[_min]) {\n\
+      _min = i;\n\
+    }\n\
+  }\n\
+  swap(j, _min);\n\
+}\n\
+",
+"/* \n\
+ \n\
+ Sort[101] Example Code: Insertion sort animated\n\
+ \n\
+ Time complexity: O(n^2), space complexity: O(n) \n\
+\n\
+ To run, hit the 'autorun' button to animate\n\
+\n\
+*/\n\
+\n\
+first_time = function() {\n\
+  write(\"Starting insertion sort\");\n\
+  j = 0;\n\
+}\n\
+\n\
+each_time = function() {\n\
+  _min = j;\n\
+  for (i = j; i < length; i++) { \n\
+    if (array[i] < array[_min]) {\n\
+      _min = i;\n\
+    }\n\
+  }\n\
+  swap(j, _min);\n\
+  j++;\n\
 }"
   ];
 

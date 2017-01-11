@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Sorting
+title: Sort[101]
 permalink: /sorting/
 ---
 
@@ -10,9 +10,11 @@ Examples: <select id="exampledata" onchange="changeExample(this);">
       <option value="">SELECT</option>
       <option value="0">Bubble Sort</option>
       <option value="1">Bubble Sort (Animated)</option>
+      <option value="2">Insertion Sort</option>
+      <option value="3">Insertion Sort (Animated)</option>
 </select>
 
-<a onclick="$('#sett').toggle(); if (!$('#sett').is(':visible')) { reset(); };"><img src="/images/gear.png" class="settingsgear"></a>
+<a onclick="$('#sett').toggle(); if (!$('#sett').is(':visible')) {  };"><img src="/images/gear.png" class="settingsgear"></a>
 
 
 <div id="sett" hidden="true" class="settings">
@@ -22,6 +24,9 @@ Examples: <select id="exampledata" onchange="changeExample(this);">
       Autorun delay: <input id="_autorun" type="int" value="500"/> <br/>
       Integer only?: <input id="_int" type="checkbox"/> <br/>
       Show visualization?: <input id="_vis" type="checkbox" checked/> <br/>
+      Save code on run?: <input id="_saveonrun" type="checkbox"/> <br/>
+      <button id="reset" onclick="reset();" class="button">Reset</button> <br/>
+      
       <!--  
             We don't need this anymore, because they autoupdate
             <button id="apply" onclick="reset();" class="button">Apply</button> -->
@@ -40,6 +45,7 @@ Input:
 Output:
 <textarea id="output" style="width: 100%; height: 6em; max-width: 100%" readonly></textarea>
 
+<button id="save" onclick="save();" class="button">Save</button>
 <button id="reset" onclick="reset();" class="button">Reset</button>
 <button id="run" onclick="run();" class="button">Run</button>
-<button id="reset" onclick="toggle_autorun();" class="button">AutoRun</button>
+<button id="toggle_reset" onclick="toggle_autorun();" class="button">AutoRun</button>
