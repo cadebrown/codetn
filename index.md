@@ -2,9 +2,24 @@
 layout: home
 ---
 
+# Synap
+
+## What is Synap?
+
+Synap is a learning management system for non-traditional education.
+
+Synap focuses on real world applications rather than preparing for tests, and textbook education. While geared mainly towards computer-oriented studies, synap can be used for any number of classes.
+
+We've created a small (and much simpler) example of a classroom, Sort[101]. I'll explain how to use it later down.
+
+Synap could be used to support a much larger school ecosystem once developed, but we leave this small visualization as an example
+
+
+# Sort[101]
+
 Do you need help understanding or visualizing sorting algorithms?
 
-If you do, Synap is for you!
+If you do, Sort[101] is for you!
 
 <br/>
 
@@ -14,7 +29,7 @@ Here is an example of a Synap class (to learn sorting):
 
 You can see the basics here. Users type code (JavaScript) into the input box, and then hit `run` or `autorun` buttons. 
 
-After this, the code will run (if you use autorun, the example is animated) and (hopefully) will sort the graph.
+After this, the code will run (if you use autorun, the example is animated) and (hopefully) sort the graph.
 
 You know the graph is sorted once every bar is colored green.
 
@@ -23,16 +38,16 @@ You know the graph is sorted once every bar is colored green.
 
 There are three colors implemented right now. To colors and animations, design your code to run in `autorun` mode (your entire code is ran over and over).
 
-  * <span style="color: #c40000;">Red</span>: The bars have not been swapped, and they are not in order.
-  * <span style="color: #06a656;">Green</span>: The bar after the current one is larger, and the one before is smaller. This shows that green bars are ordered among other green bars.
-  * <span style="color: #0000df;">Blue</span>: The bars have just been swapped (using the swap() method)
+  * Orange: sorted, (or starting position)
+  * Gray: being switched
+  * Red: is larger than the bar before it (out of order)
 
 In this example:
 
 {: .center}
 ![shot 2]({{site.baseurl}}images/shot2.png)
 
-The right hand side is already somewhat sorted (this is to be expected with a bubble sort), a large portion of the mid range bars are still being switched, and the ones on the very left are somewhat in order.
+The left hand side is already somewhat sorted (this is the process of insertion sort), and the ones on the right are not in order.
 
 
 ## Settings
@@ -51,7 +66,7 @@ The same is true with your code, so if you run some code, then refresh the page,
 
 ## Example
 
-All of these pictures so far have been using the `Animated Bubblesort` code, which can be found by going to the [sorting page](./sorting/), and selecting "Animated Bubblesort" from the `Examples` list, then click `autorun`.
+All of these pictures so far have been using the `Animated Insertion Sort` code, which can be found by going to the [sorting page](./sorting/), and selecting "Animated Insertion Sort" from the `Examples` list, then click `autorun`.
 
 You should see the bars slowly moving about and changing colors. You can see all the code in the `input` box.
 

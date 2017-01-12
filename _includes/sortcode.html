@@ -3,6 +3,7 @@
 
 <script>
 
+  // initialize once the libraries have loaded
   google.charts.setOnLoadCallback(init);
 
   /*
@@ -47,6 +48,7 @@
 
   // returns true if the array is sorted, false otherwise.
   function isSorted() {
+    // this will ALWAYS be < x for x being any real number.
     var last_x = -Infinity;
     for (x in array) {
       if (array[last_x] > array[x]) {
