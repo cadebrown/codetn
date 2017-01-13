@@ -2,17 +2,17 @@
 layout: home
 ---
 
-# Synap
+# SyNap
 
-## What is Synap?
+## What is SyNap?
 
-Synap is a learning management system for non-traditional education.
+SyNap is a learning management system for non-traditional education.
 
-Synap focuses on real world applications rather than preparing for tests, and textbook education. While geared mainly towards computer-oriented studies, synap can be used for any number of classes.
+SyNap focuses on real world applications rather than preparing for tests, and textbook education. While geared mainly towards computer-oriented studies, SyNap can be used for any number of classes.
 
 We've created a small (and much simpler) example of a classroom, Sort[101]. I'll explain how to use it later down.
 
-Synap could be used to support a much larger school ecosystem once developed, but we leave this small visualization as an example
+SyNap could be used to support a much larger school ecosystem once developed, but we leave this small visualization as an example
 
 
 # Sort[101]
@@ -23,7 +23,7 @@ If you do, Sort[101] is for you!
 
 <br/>
 
-Here is an example of a Synap class (to learn sorting):
+Here is an example of a SyNap class (to learn sorting):
 
 ![shot 1]({{site.baseurl}}images/shot1.png)
 

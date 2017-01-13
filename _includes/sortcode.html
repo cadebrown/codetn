@@ -378,7 +378,7 @@ for (j = 0; j < length; ++j) {\n\
 ",
 "/* \n\
  \n\
- Sort[101] Example Code: Insertion sort animated\n\
+ Sort[101] Example Code: Insertion Sort Animated\n\
  \n\
  Time complexity: O(n^2), space complexity: O(n) \n\
 \n\
@@ -400,7 +400,46 @@ each_time = function() {\n\
   }\n\
   swap(j, _min);\n\
   j++;\n\
-}"
+}",
+"/*\n\
+  Sort[101] Example Code: Merge Sort Animated\n\
+\n\
+  Click `run` to run with full speed, or\n\
+  Click `autorun` to run and animated, or\n\
+  \n\
+\n\
+*/\n\
+\n\
+function merge(a, b) {\n\
+  pa = pb = 0, ret=[];\n\
+  while (pa < a.length && pb < b.length) {\n\
+    if (a[pa] < b[pb]) {\n\
+       ret.push(a[pa++]);\n\
+    } else {\n\
+       ret.push(b[pb++]);\n\
+    }\n\
+  }\n\
+  for (; pa < a.length; ++pa) ret.push(a[pa]);\n\
+  for (; pb < b.length; ++pb) ret.push(b[pb]);\n\
+  return ret;\n\
+}\n\
+\n\
+function insert(arr, idx) {\n\
+  array = array.slice(0, idx).concat(arr).concat(array.slice(idx+arr.length))\n\
+}\n\
+\n\
+first_time = function() {\n\
+  group = 1;\n\
+}\n\
+\n\
+\n\
+each_time = function() {\n\
+  for (i = 0; i <= length - 2 * group; i+=2*group) {\n\
+    insert(merge(array.slice(i, i+group), array.slice(i+group, i+2*group)), i);\n\
+  }\n\
+  group *= 2;\n\
+}\n\
+"
   ];
 
 
