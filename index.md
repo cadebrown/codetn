@@ -47,7 +47,7 @@ In this example:
 {: .center}
 ![shot 2]({{site.baseurl}}images/shot2.png)
 
-The left hand side is already somewhat sorted (this is the process of insertion sort), and the ones on the right are not in order.
+The left hand side is already somewhat sorted (this is the process of selection sort), and the ones on the right are not in order.
 
 
 ## Settings
@@ -66,7 +66,7 @@ The same is true with your code, so if you run some code, then refresh the page,
 
 ## Example
 
-All of these pictures so far have been using the `Animated Insertion Sort` code, which can be found by going to the [sorting page](./sorting/), and selecting "Animated Insertion Sort" from the `Examples` list, then click `autorun`.
+All of these pictures so far have been using the `Animated selection Sort` code, which can be found by going to the [sorting page](./sorting/), and selecting "Animated selection Sort" from the `Examples` list, then click `autorun`.
 
 You should see the bars slowly moving about and changing colors. You can see all the code in the `input` box.
 
