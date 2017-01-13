@@ -44,7 +44,7 @@
   var inp, out;
 
   // settings variables
-  var lo_lim, hi_lim, _num, _int, _vis, _autorun, _saveonrun;
+  var lo_lim, hi_lim, _num, _int, _vis, _autorun, _saveonrun, _keeprunning;
 
   // returns true if the array is sorted, false otherwise.
   function isSorted() {
@@ -123,6 +123,8 @@
     createCookie("INT", (_int) ? "t" : "f")
     _saveonrun = $('#_saveonrun').is(":checked")
     createCookie("SAVEONRUN", (_saveonrun) ? "t" : "f")
+    _keeprunning = $('#_keeprunning').is(":checked")
+    createCookie("KEEPRUNNING", (_keeprunning) ? "t" : "f")
 
     if (_vis) {
       $("#chart_div").show();
@@ -210,15 +212,17 @@
     if (_is_running) {
       clearInterval(c_autorun);
     }
+    _autorun_fresh = false;
     eautotime = performance.now();
     eval(inp.value);
     first_time  ();
     c_autorun = setInterval(function () {
         if (!isSorted()) {
-          run_auto()
+          run_auto();
         } else if (_autorun_fresh) {
           _autorun_fresh = false;
-          finalize_autorun()
+          finalize_autorun();
+          if (_keeprunning) setTimeout(function() { reset(); toggle_autorun(); }, 3000);
         }
       }, _autorun);
     _is_running = true;
@@ -234,6 +238,11 @@
       return -1;
   }
 
+  last_time = function() {
+      write("Last time");
+      return -1;
+  }
+
   function stop_autorun() {
     if (_is_running) {
       clearInterval(c_autorun);
@@ -242,6 +251,11 @@
 
     finalize_autorun();
     _is_running = false;
+    last_time();
+  }
+
+  function set(key, val) {
+    $("#" + key).val(val);
   }
 
   function toggle_autorun() {
@@ -441,8 +455,79 @@ each_time = function() {\n\
   }\n\
   group *= 2;\n\
 }\n\
-"
-  ];
+",
+
+"/*\n\
+  Multi algorithm example\n\
+\n\
+  Runs Merge sort, bubblesort, selection sort, and repeats over and over.\n\
+\n\
+  In order for this to work, pick a number which is a power of two.\n\
+\n\
+  To run, click the `autorun` button\n\
+\n\
+*/ \n\
+\n\
+_keeprunning = true;\n\
+\n\
+function merge(a, b) {\n\
+  pa = pb = 0, ret=[];\n\
+  while (pa < a.length && pb < b.length) {\n\
+    if (a[pa] < b[pb]) {\n\
+       ret.push(a[pa++]);\n\
+    } else {\n\
+       ret.push(b[pb++]);\n\
+    }\n\
+  }\n\
+  for (; pa < a.length; ++pa) ret.push(a[pa]);\n\
+  for (; pb < b.length; ++pb) ret.push(b[pb]);\n\
+  return ret;\n\
+}\n\
+\n\
+function insert(arr, idx) {\n\
+  array = array.slice(0, idx).concat(arr).concat(array.slice(idx+arr.length))\n\
+}\n\
+\n\
+first_time = function() {\n\
+  if (typeof algo_count == 'undefined') algo_count = -1; \n\
+  algo_count = (algo_count + 1) % (3);\n\
+  if (algo_count == 0) {\n\
+    _autorun = 600;\n\
+  } else if (algo_count == 1) { \n\
+    _autorun = 240;\n\
+  } else if (algo_count == 2) {\n\
+    _autorun = 300;\n\
+  }\n\
+  group = 1;\n\
+  j = 0;\n\
+}\n\
+\n\
+\n\
+each_time = function() {\n\
+  if (algo_count == 0) {\n\
+    for (i = 0; i <= length - 2 * group; i+=2*group) {\n\
+      insert(merge(array.slice(i, i+group), array.slice(i+group, i+2*group)), i);\n\
+    }\n\
+    group *= 2;\n\
+  } else if (algo_count == 1) {\n\
+    for (i = 0; i < length-1; i++) { \n\
+      if (array[i] > array[i+1]) { \n\
+        swap(i, i+1); \n\
+      } \n\
+    }\n\
+  } else if (algo_count == 2) {\n\
+    _min = j;\n\
+    for (i = j; i < length; i++) { \n\
+      if (array[i] < array[_min]) {\n\
+        _min = i;\n\
+      }\n\
+    }\n\
+    swap(j, _min);\n\
+    j++;\n\
+  }\n\
+}\n\
+\n\
+"];
 
 
   function changeExample(thing) {
