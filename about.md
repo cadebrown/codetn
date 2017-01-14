@@ -4,6 +4,17 @@ title: About
 permalink: /about/
 ---
 
+## CodeTN Competition
+
+Our team placed second in the CodeTN 2016-2017 challenge:
+
+![Picture]({{site.baseurl}}/images/comp.jpg)
+
+Left to right: Joanna Reed, Cade Brown, and Gregory Croisdale.
+
+
+
+
 Hello!
 
 Welcome to our CodeTN website.
